@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -49,10 +51,14 @@ public class MyPanel extends JPanel {
 				if (!scene.isAnimated()) {
 					scene.startAnimation();
 				} else {
-					scene.stopAnimation();
+					scene.fireEvent(null, "accelerate", ' ');
+					if (bonhomme.getFPS() == 4) {
+						scene.stopAnimation();
+					}
 				} 
 			}
 		});
+		
 	}
 
 	protected void updateJPanelDisplay(Image renderedImage) {

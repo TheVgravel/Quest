@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.formix.thevgravel.quest.engine.Actor;
+import org.formix.thevgravel.quest.engine.Event;
 
 public class Bonhomme extends Actor {
 
@@ -34,7 +35,7 @@ public class Bonhomme extends Actor {
 		}
 	}
 	
-	public long getFPS() {
+	public int getFPS() {
 		return this.fps;
 	}
 	
@@ -59,8 +60,21 @@ public class Bonhomme extends Actor {
 	}
 
 	public void registerEvents() {
-		// TODO Auto-generated method stub
+		this.registerEvent("accelerate");
+	}
+	
+	@Override
+	public void notify(Event e) {
+		if (e.getData().equals(' ')) {
+			this.changeFrameRate();
+		}
+	}
 
+	private void changeFrameRate() {
+		this.fps = (this.fps + 2)  % 20;
+		if (this.fps == 0) {
+			this.fps = 4;
+		}
 	}
 
 }
