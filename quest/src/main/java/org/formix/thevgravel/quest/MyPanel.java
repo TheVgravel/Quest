@@ -28,7 +28,7 @@ public class MyPanel extends JPanel {
 	public MyPanel() {
 		this.imageToRender = null;
 		
-		this.scene = new Scene(640, 480) {
+		this.scene = new Scene(640, 200) {
 			@Override
 			public void updateDisplay(Image renderedImage) {
 				updateJPanelDisplay(renderedImage);

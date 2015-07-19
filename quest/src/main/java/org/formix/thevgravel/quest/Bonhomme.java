@@ -18,6 +18,7 @@ public class Bonhomme extends Actor {
 	private int spriteIndex;
 	private long lastUpdate;
 	private int fps;
+	private boolean mooving;
 	
 	
 	public Bonhomme() {
@@ -25,6 +26,7 @@ public class Bonhomme extends Actor {
 	}
 	
 	public Bonhomme(int fps) {
+		this.mooving = false;
 		this.spriteIndex = 0;
 		this.lastUpdate = 0;
 		this.fps = fps;
@@ -50,6 +52,7 @@ public class Bonhomme extends Actor {
 		if (retention >= maxRetentionTime) {
 			this.lastUpdate = now;
 			this.spriteIndex++;
+			this.moveRight();
 		}
 	}
 
@@ -67,7 +70,13 @@ public class Bonhomme extends Actor {
 	public void notify(Event e) {
 		if (e.getData().equals(' ')) {
 			this.changeFrameRate();
+			this.mooving = true;
 		}
+	}
+
+	private void moveRight() {
+		this.setX(this.getX() + 6);
+		this.setX(this.getX() % 500);
 	}
 
 	private void changeFrameRate() {
