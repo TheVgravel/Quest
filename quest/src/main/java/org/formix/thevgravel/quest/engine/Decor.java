@@ -12,15 +12,33 @@ import java.awt.Image;
 public class Decor extends AbstractSceneItem {
 
 	private Image image;
+	private double zoom;
+
+	public Decor() {
+		this(null);
+	}
 	
 	public Decor(Image image) {
 		super();
 		this.setZ(50);
 		this.image = image;
+		this.zoom = 100;
 	}
 	
 	public Image getImage() {
 		return this.image;
+	}
+	
+	protected void setImage(Image image) {
+		this.image = image;
+	}
+	
+	public double getZoom() {
+		return this.zoom;
+	}
+	
+	public void setZoom(double zoom) {
+		this.zoom = zoom;
 	}
 	
 	public void registerEvents() {
@@ -35,12 +53,12 @@ public class Decor extends AbstractSceneItem {
 				this.image, 
 				this.getX(), 
 				this.getY(), 
-				this.getX() + this.image.getWidth(null) - 1, 
-				this.getY() + this.image.getHeight(null) - 1, 
+				this.getX() + (int) (this.image.getWidth(null) * this.zoom / 100), 
+				this.getY() + (int) (this.image.getHeight(null) * this.zoom / 100), 
 				0,
 				0, 
-				this.image.getWidth(null) - 1, 
-				this.image.getHeight(null) - 1, 
+				this.image.getWidth(null), 
+				this.image.getHeight(null), 
 				null);
 	}
 

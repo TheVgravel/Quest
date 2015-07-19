@@ -44,6 +44,21 @@ public class MyPanel extends JPanel {
 		this.bonhomme.setY(25);
 		this.scene.addItem(bonhomme);
 		
+		Bloc bloc1 = new Bloc();
+		bloc1.setZoom(200);
+		bloc1.setX(200);
+		bloc1.setY(60);
+		this.scene.addItem(bloc1);
+		
+		
+		Bloc bloc2 = new Bloc();
+		bloc2.setZoom(400);
+		bloc2.setX(300);
+		bloc2.setY(40);
+		bloc2.setZ(125);
+		this.scene.addItem(bloc2);
+		
+		
 		
 		this.addMouseListener(new MouseAdapter() {
 			@Override
