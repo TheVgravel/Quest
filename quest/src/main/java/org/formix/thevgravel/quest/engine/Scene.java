@@ -175,41 +175,14 @@ public abstract class Scene {
 				executeAnimationLoop();
 			}
 		});
-		t.run();
+		t.start();
 	}
 
 	private void executeAnimationLoop() {
 		while (this.animated) {
 
 			long start = System.currentTimeMillis();
-
-			synchronized (this.removedItems) {
-				// cleanup SceneItems to be removed.
-				this.items.removeAll(this.removedItems);
-				this.removedItems.clear();
-			}
-
-			synchronized (this.addedItems) {
-				// Add newly created SceneItems.
-				this.items.addAll(this.addedItems);
-				this.addedItems.clear();
-			}
-
-			// Create a new image
-			Image currentFrame = new BufferedImage(this.size.width, this.size.height, BufferedImage.TYPE_INT_RGB);
-			Graphics g = currentFrame.getGraphics();
-
-			// For each SceneItem...
-			for (SceneItem sceneItem : this.items) {
-				sceneItem.update(); // update its state.
-				sceneItem.draw(g); // draw it on the new image.
-			}
-
-			// update the display and internal states.
-			this.updateDisplay(currentFrame);
-			this.frameCount++;
-			this.lastFrame = currentFrame;
-
+			this.lastFrame = renderFrame();
 			long end = System.currentTimeMillis();
 
 			// insure that the rate of frame creation do now exceed 25 FPS.
@@ -229,6 +202,36 @@ public abstract class Scene {
 			}
 
 		}
+	}
+
+	public Image renderFrame() {
+		synchronized (this.removedItems) {
+			// cleanup SceneItems to be removed.
+			this.items.removeAll(this.removedItems);
+			this.removedItems.clear();
+		}
+
+		synchronized (this.addedItems) {
+			// Add newly created SceneItems.
+			this.items.addAll(this.addedItems);
+			this.addedItems.clear();
+		}
+
+		// Create a new image
+		Image newFrame = new BufferedImage(this.size.width, this.size.height, BufferedImage.TYPE_INT_RGB);
+		Graphics g = newFrame.getGraphics();
+
+		// For each SceneItem...
+		for (SceneItem sceneItem : this.items) {
+			sceneItem.update(); // update its state.
+			sceneItem.draw(g); // draw it on the new image.
+		}
+
+		// update the display and internal states.
+		this.updateDisplay(newFrame);
+		this.frameCount++;
+		
+		return newFrame;
 	}
 
 	public void stopAnimation() {

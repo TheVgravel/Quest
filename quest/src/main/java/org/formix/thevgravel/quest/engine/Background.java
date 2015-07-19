@@ -13,7 +13,7 @@ public class Background extends AbstractSceneItem {
 
 	public Background(Color color) {
 		this.color = color;
-		this.setZ(Double.MIN_VALUE);
+		this.setZ(-999999999d);
 	}
 
 	public Color getColor() {
@@ -30,7 +30,7 @@ public class Background extends AbstractSceneItem {
 	public void draw(Graphics g) {
 		Color penColor = g.getColor();
 		g.setColor(this.color);
-		g.drawRect(0, 0, this.getScene().getSize().width - 1, this.getScene().getSize().height - 1);
+		g.fillRect(0, 0, this.getScene().getSize().width, this.getScene().getSize().height);
 		g.setColor(penColor);
 	}
 
