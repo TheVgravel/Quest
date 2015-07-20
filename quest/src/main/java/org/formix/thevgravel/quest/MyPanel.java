@@ -58,7 +58,9 @@ public class MyPanel extends JPanel {
 		bloc2.setZ(125);
 		this.scene.addItem(bloc2);
 		
-		
+		this.addKeyListener(l);
+		this.removeKeyListener(l);
+		this.getKeyListeners()
 		
 		this.addMouseListener(new MouseAdapter() {
 			@Override
@@ -66,7 +68,7 @@ public class MyPanel extends JPanel {
 				if (!scene.isAnimated()) {
 					scene.startAnimation();
 				} else {
-					scene.fireEvent(null, "accelerate", ' ');
+					scene.fireEvent("accelerate", this, null);
 					if (bonhomme.getFPS() == 4) {
 						scene.stopAnimation();
 					}

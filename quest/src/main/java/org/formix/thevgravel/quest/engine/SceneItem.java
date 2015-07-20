@@ -84,14 +84,4 @@ public interface SceneItem {
 	 *            The Scene owning this SceneItem.
 	 */
 	void registerEvents();
-	
-	
-	/**
-	 * Notify the current SceneItem of an event that have been previously
-	 * registered.
-	 * 
-	 * @param e
-	 *            The event parameter.
-	 */
-	void notify(Event e);
 }

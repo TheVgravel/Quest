@@ -3,13 +3,12 @@ package org.formix.thevgravel.quest.engine;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.KeyAdapter;
 import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -19,13 +18,13 @@ public abstract class Scene {
 
 	private static Comparator<SceneItem> sceneItemComparator = null;
 
+	private List<KeyAdapter>
+	
 	private Dimension size;
 	private Image lastFrame;
 	private SortedSet<SceneItem> items;
 	private List<SceneItem> addedItems;
 	private List<SceneItem> removedItems;
-	private Map<String, List<SceneItem>> eventRegistrations;
-	private Map<SceneItem, List<String>> registeredEvents;
 	private boolean animated;
 	private int frameCount;
 
@@ -46,8 +45,6 @@ public abstract class Scene {
 		this.removedItems = new LinkedList<SceneItem>();
 		this.animated = false;
 		this.frameCount = 0;
-		this.eventRegistrations = new HashMap<String, List<SceneItem>>();
-		this.registeredEvents = new HashMap<SceneItem, List<String>>();
 	}
 
 	private static Comparator<? super SceneItem> createComparator() {
@@ -71,7 +68,6 @@ public abstract class Scene {
 	 */
 	public void addItem(SceneItem item) {
 		item.setScene(this);
-		item.registerEvents();
 		if (this.animated) {
 			synchronized (this.addedItems) {
 				this.addedItems.add(item);
@@ -83,7 +79,6 @@ public abstract class Scene {
 
 	public void removeItem(SceneItem item) {
 		item.setScene(null);
-		this.unregisterEvents(item);
 		if (this.animated) {
 			synchronized (this.removedItems) {
 				this.removedItems.add(item);
@@ -91,17 +86,6 @@ public abstract class Scene {
 		} else {
 			this.items.remove(item);
 		}
-	}
-
-	private void unregisterEvents(SceneItem item) {
-		if (!this.registeredEvents.containsKey(item)) {
-			return;
-		}
-		List<String> eventNames = this.registeredEvents.get(item);
-		for (String eventName : eventNames) {
-			this.unregisterEvent(eventName, item);
-		}
-		this.registeredEvents.remove(item);
 	}
 
 	/**
@@ -134,34 +118,16 @@ public abstract class Scene {
 		return this.animated;
 	}
 
-	public void registerEvent(String eventName, SceneItem listener) {
-		if (!this.eventRegistrations.containsKey(eventName)) {
-			this.eventRegistrations.put(eventName, new LinkedList<SceneItem>());
-		}
-		this.eventRegistrations.get(eventName).add(listener);
-
-		if (!this.registeredEvents.containsKey(listener)) {
-			this.registeredEvents.put(listener, new LinkedList<String>());
-		}
-		this.registeredEvents.get(listener).add(eventName);
+	public void registerEvent(String eventName, SceneEventListener<?> listener) {
+		// TODO: implement
 	}
 
-	public void unregisterEvent(String eventName, SceneItem listener) {
-		if (!this.eventRegistrations.containsKey(eventName)) {
-			return;
-		}
-		this.eventRegistrations.get(eventName).remove(listener);
+	public void unregisterEvent(String eventName, SceneEventListener<?> listener) {
+		// TODO: implement
 	}
 
-	public void fireEvent(SceneItem source, String eventName, Object data) {
-		if (!this.eventRegistrations.containsKey(eventName)) {
-			return;
-		}
-		List<SceneItem> items = this.eventRegistrations.get(eventName);
-		Event event = new Event(source, eventName, data);
-		for (SceneItem item : items) {
-			item.notify(event);
-		}
+	public void fireEvent(String eventName, SceneItem source, Object data) {
+		// TODO: implement
 	}
 
 	public void startAnimation() {
@@ -185,7 +151,7 @@ public abstract class Scene {
 			this.lastFrame = renderFrame();
 			long end = System.currentTimeMillis();
 
-			// insure that the rate of frame creation do now exceed 25 FPS.
+			// insure that the rate of frame creation do not exceed 25 FPS.
 			long duration = end - start;
 			try {
 				if (duration < FRAME_PERIOD) {

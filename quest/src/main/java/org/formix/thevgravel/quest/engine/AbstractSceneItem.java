@@ -47,21 +47,17 @@ public abstract class AbstractSceneItem implements SceneItem {
 		this.z = z;
 	}
 
-	public void notify(Event e) {
-		// do nothing.
-	}
-	
-	public void fireEvent(SceneItem source, String eventName, Object data) {
+	public void fireEvent(String eventName, SceneItem source, Object data) {
 		if (this.getScene() == null) {
 			return;
 		}
-		this.getScene().fireEvent(source, eventName, data);
+		this.getScene().fireEvent(eventName, source, data);
 	}
 	
-	public void registerEvent(String eventName) {
+	public void registerEvent(String eventName, SceneEventListener<?> listener) {
 		if (this.getScene() == null) {
 			return;
 		}
-		this.getScene().registerEvent(eventName, this);
+		this.getScene().registerEvent(eventName, listener);
 	}
 }
