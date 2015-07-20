@@ -2,6 +2,8 @@ package org.formix.thevgravel.quest.engine;
 
 import java.awt.Graphics;
 
+import org.formix.thevgravel.quest.engine.events.SceneEvent;
+
 public interface SceneItem {
 
 	/**
@@ -93,5 +95,5 @@ public interface SceneItem {
 	 * @param e
 	 *            The event parameter.
 	 */
-	void notify(Event e);
+	void notify(SceneEvent e);
 }

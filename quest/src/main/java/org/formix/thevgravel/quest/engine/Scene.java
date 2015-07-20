@@ -13,12 +13,16 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.formix.thevgravel.quest.engine.events.SceneEvent;
+import org.formix.thevgravel.quest.engine.events.SceneEventListener;
+
 public abstract class Scene {
 
 	public static final int FRAME_PERIOD = 40; // 40 ms -> 25 FPS
 
 	private static Comparator<SceneItem> sceneItemComparator = null;
 
+	
 	private Dimension size;
 	private Image lastFrame;
 	private SortedSet<SceneItem> items;
@@ -29,6 +33,14 @@ public abstract class Scene {
 	private boolean animated;
 	private int frameCount;
 
+	private Map<String, SceneEventListener<?>> sceneEventListeners;
+
+	
+	public Scene() {
+		this(640, 480);
+	}
+	
+	
 	/**
 	 * Creates a scene of the given size.
 	 * 
@@ -48,6 +60,7 @@ public abstract class Scene {
 		this.frameCount = 0;
 		this.eventRegistrations = new HashMap<String, List<SceneItem>>();
 		this.registeredEvents = new HashMap<SceneItem, List<String>>();
+		this.sceneEventListeners = new HashMap<String, SceneEventListener<?>>();
 	}
 
 	private static Comparator<? super SceneItem> createComparator() {
@@ -153,15 +166,15 @@ public abstract class Scene {
 		this.eventRegistrations.get(eventName).remove(listener);
 	}
 
-	public void fireEvent(SceneItem source, String eventName, Object data) {
-		if (!this.eventRegistrations.containsKey(eventName)) {
-			return;
-		}
-		List<SceneItem> items = this.eventRegistrations.get(eventName);
-		Event event = new Event(source, eventName, data);
-		for (SceneItem item : items) {
-			item.notify(event);
-		}
+	public void fireEvent(SceneEvent<?> event) {
+//		if (!this.eventRegistrations.containsKey(eventName)) {
+//			return;
+//		}
+//		List<SceneItem> items = this.eventRegistrations.get(eventName);
+//		SceneEvent event = new SceneEvent(eventName, source, data);
+//		for (SceneItem item : items) {
+//			item.notify(event);
+//		}
 	}
 
 	public void startAnimation() {

@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.formix.thevgravel.quest.engine.Actor;
-import org.formix.thevgravel.quest.engine.Event;
+import org.formix.thevgravel.quest.engine.events.SceneEvent;
 
 public class Bonhomme extends Actor {
 
@@ -67,7 +67,7 @@ public class Bonhomme extends Actor {
 	}
 	
 	@Override
-	public void notify(Event e) {
+	public void notify(SceneEvent e) {
 		if (e.getData().equals(' ')) {
 			this.changeFrameRate();
 			this.mooving = true;

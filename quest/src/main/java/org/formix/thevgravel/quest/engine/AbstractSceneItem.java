@@ -1,5 +1,6 @@
 package org.formix.thevgravel.quest.engine;
 
+import org.formix.thevgravel.quest.engine.events.SceneEvent;
 
 public abstract class AbstractSceneItem implements SceneItem {
 
@@ -47,15 +48,15 @@ public abstract class AbstractSceneItem implements SceneItem {
 		this.z = z;
 	}
 
-	public void notify(Event e) {
+	public void notify(SceneEvent e) {
 		// do nothing.
 	}
 	
-	public void fireEvent(SceneItem source, String eventName, Object data) {
+	public void fireEvent(SceneEvent event) {
 		if (this.getScene() == null) {
 			return;
 		}
-		this.getScene().fireEvent(source, eventName, data);
+		this.getScene().fireEvent(event);
 	}
 	
 	public void registerEvent(String eventName) {
