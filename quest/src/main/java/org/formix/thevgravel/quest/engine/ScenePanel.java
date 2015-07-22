@@ -1,15 +1,14 @@
 package org.formix.thevgravel.quest.engine;
 
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-
-import org.formix.thevgravel.quest.engine.events.KeyboardData;
-import org.formix.thevgravel.quest.engine.events.KeyboardDataType;
-import org.formix.thevgravel.quest.engine.events.SceneEvent;
 
 public class ScenePanel extends JPanel {
 
@@ -29,29 +28,69 @@ public class ScenePanel extends JPanel {
 		};
 
 		this.convertKeyListener();
+		this.convertMouseListener();
 
 		this.setFocusable(true);
+	}
+	
+	private void convertMouseListener() {
+		this.addMouseListener(new MouseListener() {
+			
+			public void mouseReleased(MouseEvent e) {
+				for (MouseListener listener : scene.getMouseListeners()) {
+					listener.mouseReleased(e);
+				}
+			}
+			
+			public void mousePressed(MouseEvent e) {
+				for (MouseListener listener : scene.getMouseListeners()) {
+					listener.mousePressed(e);
+				}
+			}
+			
+			public void mouseExited(MouseEvent e) {
+				for (MouseListener listener : scene.getMouseListeners()) {
+					listener.mouseExited(e);
+				}
+			}
+			
+			public void mouseEntered(MouseEvent e) {
+				for (MouseListener listener : scene.getMouseListeners()) {
+					listener.mouseEntered(e);
+				}
+			}
+			
+			public void mouseClicked(MouseEvent e) {
+				for (MouseListener listener : scene.getMouseListeners()) {
+					listener.mouseClicked(e);
+				}
+			}
+		});
+	}
+
+	protected Scene getScene() {
+		return this.scene;
 	}
 
 	private void convertKeyListener() {
 		this.addKeyListener(new KeyListener() {
 
 			public void keyTyped(KeyEvent e) {
-				KeyboardData data = new KeyboardData(e, KeyboardDataType.PRESSED);
-				SceneEvent<KeyboardData> event = new SceneEvent<KeyboardData>(scene, "keyboard", data);
-				scene.fireEvent(event);
+				for (KeyListener listener : scene.getKeyListeners()) {
+					listener.keyTyped(e);
+				}
 			}
 
 			public void keyReleased(KeyEvent e) {
-				KeyboardData data = new KeyboardData(e, KeyboardDataType.UP);
-				SceneEvent<KeyboardData> event = new SceneEvent<KeyboardData>(scene, "keyboard", data);
-				scene.fireEvent(event);
+				for (KeyListener listener : scene.getKeyListeners()) {
+					listener.keyReleased(e);
+				}
 			}
 
 			public void keyPressed(KeyEvent e) {
-				KeyboardData data = new KeyboardData(e, KeyboardDataType.DOWN);
-				SceneEvent<KeyboardData> event = new SceneEvent<KeyboardData>(scene, "keyboard", data);
-				scene.fireEvent(event);
+				for (KeyListener listener : scene.getKeyListeners()) {
+					listener.keyPressed(e);
+				}
 			}
 		});
 	}
@@ -64,4 +103,14 @@ public class ScenePanel extends JPanel {
 			}
 		});
 	}
+	
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Image image = this.renderedImage; 
+		if (image == null) {
+			image = this.scene.renderFrame();
+		}
+		g.drawImage(image, 0, 0, null);
+	}
+	
 }

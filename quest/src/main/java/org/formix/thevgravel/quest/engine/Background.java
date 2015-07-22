@@ -3,7 +3,7 @@ package org.formix.thevgravel.quest.engine;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Background extends AbstractSceneItem {
+public class Background extends AbstractItem {
 
 	private Color color;
 
@@ -13,7 +13,7 @@ public class Background extends AbstractSceneItem {
 
 	public Background(Color color) {
 		this.color = color;
-		this.setZ(-999999999d);
+		this.setZ(-99999999);
 	}
 
 	public Color getColor() {
@@ -34,7 +34,7 @@ public class Background extends AbstractSceneItem {
 		g.setColor(penColor);
 	}
 
-	public void registerEvents() {
+	public void initialize() {
 	}
 
 }

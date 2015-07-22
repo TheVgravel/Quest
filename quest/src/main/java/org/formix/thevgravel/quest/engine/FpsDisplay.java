@@ -3,17 +3,11 @@ package org.formix.thevgravel.quest.engine;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class FpsDisplay extends Actor {
+public class FpsDisplay extends AbstractItem {
 
 	private int lastFrameCount;
 	private long lastUpdate;
 	private String text;
-
-	public FpsDisplay() {
-		this.setZ(200);
-		this.lastUpdate = System.currentTimeMillis();
-		this.text = "Getting data...";
-	}
 
 	public void update() {
 		long now = System.currentTimeMillis();
@@ -33,8 +27,11 @@ public class FpsDisplay extends Actor {
 		g.drawString(this.text, 20, 20);
 	}
 
-	public void registerEvents() {
+	public void initialize() {
 		this.lastFrameCount = this.getScene().getFrameCount();
+		this.setZ(200);
+		this.lastUpdate = System.currentTimeMillis();
+		this.text = "Getting data...";
 	}
 
 }

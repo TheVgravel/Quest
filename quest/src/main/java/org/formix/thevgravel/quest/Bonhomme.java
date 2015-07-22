@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 
 import org.formix.thevgravel.quest.engine.Actor;
 import org.formix.thevgravel.quest.engine.events.SceneEvent;
+import org.formix.thevgravel.quest.engine.events.SceneEventListener;
 
 public class Bonhomme extends Actor {
 
@@ -62,18 +63,17 @@ public class Bonhomme extends Actor {
 				0, spriteX + SPRITE_WIDTH - 1, SPRITE_HEIGHT - 1, null);
 	}
 
-	public void registerEvents() {
-		this.registerEvent("accelerate");
+	public void initialize() {
+		
+		this.registerEventListener("accelerate", new SceneEventListener() {
+			public void handle(SceneEvent<?> event) {
+				changeFrameRate();
+				mooving = true;
+			}
+		});
+		
 	}
 	
-	@Override
-	public void notify(SceneEvent e) {
-		if (e.getData().equals(' ')) {
-			this.changeFrameRate();
-			this.mooving = true;
-		}
-	}
-
 	private void moveRight() {
 		this.setX(this.getX() + 6);
 		this.setX(this.getX() % 500);
