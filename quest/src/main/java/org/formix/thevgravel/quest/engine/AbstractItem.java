@@ -20,6 +20,7 @@ public abstract class AbstractItem implements Item {
 
 	public void setScene(Scene scene) {
 		this.scene = scene;
+		this.initialize();
 	}
 
 	public int getX() {
@@ -45,5 +46,4 @@ public abstract class AbstractItem implements Item {
 	public void setZ(int z) {
 		this.z = z;
 	}
-
 }

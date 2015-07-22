@@ -17,7 +17,7 @@ public abstract class Scene {
 
 	public static final int FRAME_PERIOD = 40; // 40 ms -> 25 FPS
 
-	private static Comparator<Item> sceneItemComparator = null;
+	private static Comparator<Item> itemComparator = null;
 
 	private Dimension size;
 	private Image lastFrame;
@@ -57,14 +57,14 @@ public abstract class Scene {
 	}
 
 	private static Comparator<? super Item> createComparator() {
-		if (sceneItemComparator == null) {
-			sceneItemComparator = new Comparator<Item>() {
+		if (itemComparator == null) {
+			itemComparator = new Comparator<Item>() {
 				public int compare(Item o1, Item o2) {
 					return Double.compare(o1.getZ(), o2.getZ());
 				}
 			};
 		}
-		return sceneItemComparator;
+		return itemComparator;
 	}
 	
 	
@@ -95,8 +95,8 @@ public abstract class Scene {
 
 
 	/**
-	 * Add a SceneItem to the current scene. When added, the
-	 * SceneItem.setScene(this) and SceneItem.registerEvents methods are called
+	 * Add a item to the current scene. When added, the
+	 * item.setScene(this) and item.registerEvents methods are called
 	 * for the item parameter.
 	 * 
 	 * @param item
@@ -203,20 +203,20 @@ public abstract class Scene {
 
 	public void updateState() {
 		synchronized (this.removedItems) {
-			// cleanup SceneItems to be removed.
+			// cleanup items to be removed.
 			this.items.removeAll(this.removedItems);
 			this.removedItems.clear();
 		}
 
 		synchronized (this.addedItems) {
-			// Add newly created SceneItems.
+			// Add newly created items.
 			this.items.addAll(this.addedItems);
 			this.addedItems.clear();
 		}
 		
-		// For each SceneItem...
-		for (Item sceneItem : this.items) {
-			sceneItem.update(); // update its state.
+		// For each item...
+		for (Item item : this.items) {
+			item.update(); // update its state.
 		}
 	}
 
@@ -226,9 +226,9 @@ public abstract class Scene {
 		Image newFrame = new BufferedImage(this.size.width, this.size.height, BufferedImage.TYPE_INT_RGB);
 		Graphics g = newFrame.getGraphics();
 
-		// For each SceneItem...
-		for (Item sceneItem : this.items) {
-			sceneItem.draw(g); // draw it on the new image.
+		// For each item...
+		for (Item item : this.items) {
+			item.draw(g); // draw it on the new image.
 		}
 
 		// update the display and internal states.

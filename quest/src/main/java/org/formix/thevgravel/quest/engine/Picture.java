@@ -3,24 +3,24 @@ package org.formix.thevgravel.quest.engine;
 import java.awt.Graphics;
 import java.awt.Image;
 
-public abstract class ImageItem extends AbstractItem {
+public abstract class Picture extends AbstractItem {
 
 	private Image image;
 	private double zoomFactor;
 
 	
-	public ImageItem() {
+	public Picture() {
 		this(null, 100);
 	}
 	
-	public ImageItem(Image image) {
+	public Picture(Image image) {
 		this(image, 100);
 	}
 	
 	/**
 	 * Initializes a ImageItem to with a given image and ZoomFactor. 
 	 */
-	public ImageItem(Image image, double zoomFactor) {
+	public Picture(Image image, double zoomFactor) {
 		this.image = image; 
 		this.zoomFactor = zoomFactor;
 	}
@@ -51,7 +51,7 @@ public abstract class ImageItem extends AbstractItem {
 		return this.zoomFactor * this.getZ() / 100;
 	}
 
-	public void draw(Graphics g) {
+	public synchronized void draw(Graphics g) {
 		if (this.image == null) {
 			return;
 		}

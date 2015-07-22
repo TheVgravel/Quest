@@ -5,9 +5,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.formix.thevgravel.quest.engine.ImageItem;
+import org.formix.thevgravel.quest.engine.Picture;
 
-public class Bloc extends ImageItem {
+public class Bloc extends Picture {
 	
 	
 	public Bloc() {

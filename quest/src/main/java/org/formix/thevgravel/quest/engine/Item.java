@@ -66,11 +66,13 @@ public interface Item {
 
 	/**
 	 * Update the state of the current Item. Called just before being drawn.
+	 * This method implementation must be synchronized.
 	 */
 	void update();
 
 	/**
-	 * Draw this Item to the given graphics object.
+	 * Draw this Item to the given graphics object. This method implementation
+	 * must be synchronized.
 	 * 
 	 * @param g
 	 */
