@@ -58,7 +58,9 @@ public class MyPanel extends ScenePanel {
 			public void mouseClicked(MouseEvent e) {
 				if (!getScene().isAnimated()) {
 					getScene().startAnimation();
-				} 
+				} else {
+					getScene().stopAnimation();
+				}
 			}
 		});
 		
