@@ -16,7 +16,8 @@ import java.util.TreeSet;
 
 public abstract class Scene {
 
-	public static final int FRAME_PERIOD = 40; // 40 ms -> 25 FPS
+	//public static final int FRAME_PERIOD = 40; // 40 ms -> 25 FPS
+	public static final int FRAME_PERIOD = 33; // 33 ms -> 30 FPS
 
 	private static Comparator<Item> itemComparator = null;
 

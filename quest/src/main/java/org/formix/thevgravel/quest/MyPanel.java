@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import org.formix.thevgravel.quest.engine.Background;
 import org.formix.thevgravel.quest.engine.FpsDisplay;
@@ -50,20 +48,7 @@ public class MyPanel extends ScenePanel {
 		bloc2.setY(40);
 		bloc2.setZ(125);
 		this.getScene().addItem(bloc2);
-		
-		
-		
-		this.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (!getScene().isAnimated()) {
-					getScene().startAnimation();
-				} else {
-					getScene().stopAnimation();
-				}
-			}
-		});
-		
+		getScene().startAnimation();
 	}
 
 	protected void updateJPanelDisplay(Image renderedImage) {
