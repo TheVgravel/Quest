@@ -29,6 +29,23 @@ public class Animation extends Sprite {
 	}
 
 	/**
+	 * Creates an animation from the given parameters taking the whole image for
+	 * animation.
+	 * 
+	 * @param image
+	 *            The image containing all part of the curent animation.
+	 * 
+	 * @param spriteCount
+	 *            The number of sprites in the current animation.
+	 * 
+	 * @param fps
+	 *            The desired frame per seconds for the current animation.
+	 */
+	public Animation(Image image, int spriteCount, int fps) {
+		this(image, spriteCount, fps, null);
+	}
+
+	/**
 	 * Creates an animation from the given parameters.
 	 * 
 	 * @param image
@@ -155,8 +172,7 @@ public class Animation extends Sprite {
 		this.fps = fps;
 		this.spritePeriod = 1000 / fps;
 	}
-	
-	
+
 	@Override
 	public void setImage(Image image) {
 		super.setImage(image);
@@ -203,8 +219,7 @@ public class Animation extends Sprite {
 		}
 		return false;
 	}
-	
-	
+
 	@Override
 	public synchronized void draw(Graphics g) {
 		if (this.getImage() == null) {
@@ -212,21 +227,14 @@ public class Animation extends Sprite {
 		}
 
 		int imgWidth = this.spriteWidth;
-		int imgHeight = this.getImage().getHeight(null);
+		int imgHeight = this.getAnimationPosition().height;
 		int displayedWidth = (int) (imgWidth * this.getEffectiveZoomFactor() / 100);
 		int displayedHeight = (int) (imgHeight * this.getEffectiveZoomFactor() / 100);
-		
-		g.drawImage(
-				this.getImage(), 
-				this.getX(), 
-				this.getY(),
-				this.getX() + displayedWidth,
-				this.getY() + displayedHeight, 
-				this.getAnimationPosition().x + imgWidth * this.spriteIndex, 
-				this.getAnimationPosition().y, 
-				this.getAnimationPosition().x + imgWidth * (this.spriteIndex + 1), 
-				this.getAnimationPosition().y + this.getAnimationPosition().height, 
-				null);
+
+		g.drawImage(this.getImage(), this.getX(), this.getY(), this.getX() + displayedWidth,
+				this.getY() + displayedHeight, this.getAnimationPosition().x + imgWidth * this.spriteIndex,
+				this.getAnimationPosition().y, this.getAnimationPosition().x + imgWidth * (this.spriteIndex + 1),
+				this.getAnimationPosition().y + this.getAnimationPosition().height, null);
 	}
 
 }
