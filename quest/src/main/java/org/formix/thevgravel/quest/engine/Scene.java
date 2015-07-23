@@ -102,7 +102,6 @@ public abstract class Scene {
 	 */
 	public void addItem(Item item) {
 		item.setScene(this);
-		item.initialize();
 		if (this.animated) {
 			synchronized (this.addedItems) {
 				this.addedItems.add(item);

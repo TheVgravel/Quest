@@ -155,6 +155,13 @@ public class Animation extends Sprite {
 		this.fps = fps;
 		this.spritePeriod = 1000 / fps;
 	}
+	
+	
+	@Override
+	public void setImage(Image image) {
+		super.setImage(image);
+		this.setAnimationPosition(null);
+	}
 
 	/**
 	 * Tells if the current sprite is animated.

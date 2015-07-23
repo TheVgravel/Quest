@@ -1,6 +1,8 @@
 package org.formix.thevgravel.quest;
 
 import java.awt.Image;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -21,7 +23,8 @@ public class Bonhomme extends Animation {
 		try {
 			Image image = ImageIO.read(this.getClass().getResourceAsStream("courir-droite-sprite.png"));
 			this.setImage(image);
-			this.setAnimationPosition(null);
+			this.setImageCount(4);
+			this.setFps(4);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -52,12 +55,23 @@ public class Bonhomme extends Animation {
 				accelerate();
 			}
 		});
+		
+		this.getScene().addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				System.out.println("DOWN: " + e.getKeyCode());
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				System.out.println("UP: " + e.getKeyCode());
+			}
+		});
 	}
 	
 	protected void accelerate() {
 		if (!this.isAnimated()) {
 			this.startAnimation();
-			return;
 		}
 	}
 
