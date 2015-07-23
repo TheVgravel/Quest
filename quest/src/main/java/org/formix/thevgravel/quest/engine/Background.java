@@ -24,7 +24,8 @@ public class Background extends AbstractItem {
 		this.color = color;
 	}
 
-	public void update() {
+	public boolean update() {
+		return false;
 	}
 
 	public void draw(Graphics g) {

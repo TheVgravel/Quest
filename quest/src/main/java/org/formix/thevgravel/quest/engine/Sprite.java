@@ -1,94 +1,128 @@
 package org.formix.thevgravel.quest.engine;
 
+import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Rectangle;
 
-public class Sprite extends Picture {
+/**
+ * A Sprite is a dynamic Scene item backed by an image with or without
+ * transparency.
+ * 
+ * @author jpgravel
+ *
+ */
+public class Sprite extends AbstractItem {
 
-	private int imageCount;
-	private int fps;
-	private Rectangle spritePosition;
-	private int spriteIndex;
+	private Image image;
+	private double zoomFactor;
 
-	public Sprite(Image image, int imageCount) {
-		super(image);
-		this.imageCount = imageCount;
-		this.fps = imageCount;
-		this.setSpritePosition(null);
-		this.spriteIndex = 0;
-	}
-
-	public int getSpriteIndex() {
-		return this.spriteIndex;
-	}
-
-	public void setSpriteIndex(int spriteIndex) {
-		if (spriteIndex < 0 || spriteIndex >= this.imageCount) {
-			throw new IllegalArgumentException("The sprite index must be between 0 and imageCount - 1.");
-		}
-		this.spriteIndex = spriteIndex;
+	/**
+	 * Creates a dummy sprite for subclassing.
+	 */
+	protected Sprite() {
+		this(null, 100);
 	}
 
 	/**
-	 * Gets a single image width within the sprite. ImageWidth is
-	 * position.getWidth() / imageCount.
+	 * Creates a Sprite object.
+	 * 
+	 * @param image
+	 *            The backing image of the sprite.
+	 */
+	public Sprite(Image image) {
+		this(image, 100);
+	}
+
+	/**
+	 * Initializes a ImageItem to with a given image and ZoomFactor.
+	 * 
+	 * @param image
+	 *            The image to use for the sprite.
+	 * 
+	 * @param zoomFactor
+	 *            The zoom factor applied to the sprite.
+	 */
+	public Sprite(Image image, double zoomFactor) {
+		this.image = image;
+		this.zoomFactor = zoomFactor;
+		this.setZ(100);
+	}
+
+	/**
+	 * Gets the image of the current sprite.
+	 * 
+	 * @return the image of the current sprite.
+	 */
+	public Image getImage() {
+		return image;
+	}
+
+	/**
+	 * Sets the image of the current sprite.
+	 * 
+	 * @param image
+	 *            the image of the current sprite.
+	 */
+	public void setImage(Image image) {
+		this.image = image;
+	}
+
+	/**
+	 * Gets the zoom factor applied to the current sprite. The default value is
+	 * 100 which imply a 1:1 ratio.
 	 * 
 	 * @return
 	 */
-	public int getImageWidth() {
-		return this.spritePosition.getWidth() / this.imageCount;
+	public double getZoomFactor() {
+		return zoomFactor;
 	}
 
 	/**
-	 * Gets the sprite position within the specified image. By default, the
-	 * sprite position is the rectangle defined by the whole image: 0, 0,
-	 * image.width, image.height
+	 * Sets the zoom factor of the current sprite, from 0 to infinite. 100 being
+	 * 100% or a 1:1 ratio.
 	 * 
-	 * @return the sprite position within the specified image.
+	 * @param zoomFactor
+	 *            the zoom factor.
 	 */
-	public Rectangle getSpritePosition() {
-		return spritePosition;
+	public void setZoomFactor(double zoomFactor) {
+		this.zoomFactor = zoomFactor;
 	}
 
 	/**
-	 * Sets the sprite position within the specified image. Setting the sprite
-	 * position to null will revert back to the default sprite position of 0, 0,
-	 * image.width, image.height.
+	 * Returns the zoom factor multiplied by the Z_Index / 100.
 	 * 
-	 * @param spritePosition
-	 *            the sprite position within the specified image.
+	 * @return the zoom factor multiplied by the Z_Index / 100.
 	 */
-	public void setSpritePosition(Rectangle spritePosition) {
-		if (spritePosition != null) {
-			this.spritePosition = spritePosition;
-		} else {
-			this.spritePosition = new Rectangle(0, 0, this.getImage().getWidth(null), this.getImage().getHeight(null));
-		}
+	public double getEffectiveZoomFactor() {
+		return this.zoomFactor * this.getZ() / 100.0;
 	}
 
-	public int getImageCount() {
-		return imageCount;
-	}
-
-	public void setImageCount(int imageCount) {
-		this.imageCount = imageCount;
-	}
-
-	public int getFps() {
-		return fps;
-	}
-
-	public void setFps(int fps) {
-		this.fps = fps;
-	}
-
-	public synchronized void update() {
-
-		g.drawImage(this.getImage(), this.getX(), this.getY(), this.getX() + SPRITE_WIDTH * 4,
-				this.getY() + SPRITE_HEIGHT * 4, spriteX, 0, spriteX + SPRITE_WIDTH - 1, SPRITE_HEIGHT - 1, null);
+	public boolean update() {
+		return false;
 	}
 
 	public void initialize() {
 	}
+	
+	public synchronized void draw(Graphics g) {
+		if (this.image == null) {
+			return;
+		}
 
+		int imgWidth = this.image.getWidth(null);
+		int imgHeight = this.getImage().getHeight(null);
+		int displayedWidth = (int) (imgWidth * this.getEffectiveZoomFactor() / 100);
+		int displayedHeight = (int) (imgHeight * this.getEffectiveZoomFactor() / 100);
+
+		g.drawImage(
+				this.image, 
+				this.getX(), 
+				this.getY(),
+				this.getX() + displayedWidth,
+				this.getY() + displayedHeight, 
+				0, 
+				0, 
+				imgWidth, 
+				imgHeight, 
+				null);
+	}
 }

@@ -67,8 +67,10 @@ public interface Item {
 	/**
 	 * Update the state of the current Item. Called just before being drawn.
 	 * This method implementation must be synchronized.
+	 * 
+	 * @return true if the item was updated, false otherwise.
 	 */
-	void update();
+	boolean update();
 
 	/**
 	 * Draw this Item to the given graphics object. This method implementation

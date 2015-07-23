@@ -9,7 +9,7 @@ public class FpsDisplay extends AbstractItem {
 	private long lastUpdate;
 	private String text;
 
-	public void update() {
+	public boolean update() {
 		long now = System.currentTimeMillis();
 		double interval = now - this.lastUpdate;
 		if (interval > 2000) {
@@ -19,7 +19,9 @@ public class FpsDisplay extends AbstractItem {
 			this.text = String.format("%.3f fps", fps);
 			this.lastUpdate = now;
 			this.lastFrameCount = frameCount;
+			return true;
 		}
+		return false;
 	}
 
 	public void draw(Graphics g) {

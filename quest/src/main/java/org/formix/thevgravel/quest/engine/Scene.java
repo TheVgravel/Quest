@@ -20,7 +20,6 @@ public abstract class Scene {
 	private static Comparator<Item> itemComparator = null;
 
 	private Dimension size;
-	private Image lastFrame;
 	private SortedSet<Item> items;
 	private List<Item> addedItems;
 	private List<Item> removedItems;
@@ -45,7 +44,6 @@ public abstract class Scene {
 	 */
 	public Scene(int width, int height) {
 		this.size = new Dimension(width, height);
-		this.lastFrame = null;
 		this.items = new TreeSet<Item>(createComparator());
 		this.addedItems = new LinkedList<Item>();
 		this.removedItems = new LinkedList<Item>();
@@ -134,14 +132,9 @@ public abstract class Scene {
 	public Dimension getSize() {
 		return this.size.getSize();
 	}
-
-	/**
-	 * Return the last generated image of the current scene.
-	 * 
-	 * @return the last generated image of the current scene.
-	 */
-	public Image getLastFrame() {
-		return this.lastFrame;
+	
+	public void setSize(Dimension size) {
+		this.size = size;
 	}
 
 	public int getFrameCount() {
@@ -179,7 +172,9 @@ public abstract class Scene {
 
 			long start = System.currentTimeMillis();
 			this.updateState();
-			this.lastFrame = renderFrame();
+			Image newFrame = renderFrame();
+			this.updateDisplay(newFrame);
+			this.frameCount++;
 			long end = System.currentTimeMillis();
 
 			// insure that the rate of frame creation do now exceed 25 FPS.
@@ -230,10 +225,6 @@ public abstract class Scene {
 		for (Item item : this.items) {
 			item.draw(g); // draw it on the new image.
 		}
-
-		// update the display and internal states.
-		this.updateDisplay(newFrame);
-		this.frameCount++;
 
 		return newFrame;
 	}
