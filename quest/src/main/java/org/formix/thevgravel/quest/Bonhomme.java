@@ -58,6 +58,10 @@ public class Bonhomme extends Animation {
 			return;
 		}
 		switch (e.getKeyCode()) {
+		
+		case 16:  // shift
+			this.setFps(16); // running.
+			break;
 
 		case 37: // left
 			state = BonhommeState.RUN_LEFT;
@@ -87,6 +91,10 @@ public class Bonhomme extends Animation {
 		this.lastKeyCode = -1;
 		
 		switch (e.getKeyCode()) {
+
+		case 16:  // shift
+			this.setFps(10); // stop running.
+			break;
 
 		case 37: // left
 			if (state == BonhommeState.RUN_LEFT) {
@@ -119,14 +127,20 @@ public class Bonhomme extends Animation {
 	public synchronized boolean update() {
 		boolean updated = super.update();;
 
+		int dx = 6;   // X movement.
+		if (this.getFps() == 16) {
+			// if running, double the speed.
+			dx = dx * 2;
+		}
+		
 		switch (this.state) {
 		case RUN_RIGHT:
-			this.moveX(6);
+			this.moveX(dx);
 			updated = true;
 			break;
 
 		case RUN_LEFT:
-			this.moveX(-6);
+			this.moveX(-dx);
 			updated = true;
 			break;
 
