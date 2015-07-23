@@ -3,13 +3,13 @@ package org.formix.thevgravel.quest.engine;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -17,17 +17,21 @@ public abstract class Scene {
 
 	public static final int FRAME_PERIOD = 40; // 40 ms -> 25 FPS
 
-	private static Comparator<SceneItem> sceneItemComparator = null;
+	private static Comparator<Item> itemComparator = null;
 
 	private Dimension size;
-	private Image lastFrame;
-	private SortedSet<SceneItem> items;
-	private List<SceneItem> addedItems;
-	private List<SceneItem> removedItems;
-	private Map<String, List<SceneItem>> eventRegistrations;
-	private Map<SceneItem, List<String>> registeredEvents;
+	private SortedSet<Item> items;
+	private List<Item> addedItems;
+	private List<Item> removedItems;
 	private boolean animated;
 	private int frameCount;
+	
+	private List<KeyListener> keyListeners;
+	private List<MouseListener> mouseListeners;
+
+	public Scene() {
+		this(640, 480);
+	}
 
 	/**
 	 * Creates a scene of the given size.
@@ -40,38 +44,64 @@ public abstract class Scene {
 	 */
 	public Scene(int width, int height) {
 		this.size = new Dimension(width, height);
-		this.lastFrame = null;
-		this.items = new TreeSet<SceneItem>(createComparator());
-		this.addedItems = new LinkedList<SceneItem>();
-		this.removedItems = new LinkedList<SceneItem>();
+		this.items = new TreeSet<Item>(createComparator());
+		this.addedItems = new LinkedList<Item>();
+		this.removedItems = new LinkedList<Item>();
 		this.animated = false;
 		this.frameCount = 0;
-		this.eventRegistrations = new HashMap<String, List<SceneItem>>();
-		this.registeredEvents = new HashMap<SceneItem, List<String>>();
+		
+		this.keyListeners = new LinkedList<KeyListener>();
+		this.mouseListeners = new LinkedList<MouseListener>();
 	}
 
-	private static Comparator<? super SceneItem> createComparator() {
-		if (sceneItemComparator == null) {
-			sceneItemComparator = new Comparator<SceneItem>() {
-				public int compare(SceneItem o1, SceneItem o2) {
+	private static Comparator<? super Item> createComparator() {
+		if (itemComparator == null) {
+			itemComparator = new Comparator<Item>() {
+				public int compare(Item o1, Item o2) {
 					return Double.compare(o1.getZ(), o2.getZ());
 				}
 			};
 		}
-		return sceneItemComparator;
+		return itemComparator;
+	}
+	
+	
+	public void addKeyListener(KeyListener listener) {
+		this.keyListeners.add(listener);
+	}
+	
+	public void removeKeyListener(KeyListener listener) {
+		this.keyListeners.remove(listener);
+	}
+	
+	public KeyListener[] getKeyListeners() {
+		return this.keyListeners.toArray(new KeyListener[this.keyListeners.size()]);
+	}
+	
+	
+	public void addMouseListener(MouseListener listener) {
+		this.mouseListeners.add(listener);
+	}
+	
+	public void removeMouseListener(MouseListener listener) {
+		this.mouseListeners.remove(listener);
+	}
+	
+	public MouseListener[] getMouseListeners() {
+		return this.mouseListeners.toArray(new MouseListener[this.mouseListeners.size()]);
 	}
 
+
 	/**
-	 * Add a SceneItem to the current scene. When added, the
-	 * SceneItem.setScene(this) and SceneItem.registerEvents methods are called
+	 * Add a item to the current scene. When added, the
+	 * item.setScene(this) and item.registerEvents methods are called
 	 * for the item parameter.
 	 * 
 	 * @param item
 	 *            The item to add.
 	 */
-	public void addItem(SceneItem item) {
+	public void addItem(Item item) {
 		item.setScene(this);
-		item.registerEvents();
 		if (this.animated) {
 			synchronized (this.addedItems) {
 				this.addedItems.add(item);
@@ -81,7 +111,7 @@ public abstract class Scene {
 		}
 	}
 
-	public void removeItem(SceneItem item) {
+	public void removeItem(Item item) {
 		item.setScene(null);
 		this.unregisterEvents(item);
 		if (this.animated) {
@@ -93,17 +123,6 @@ public abstract class Scene {
 		}
 	}
 
-	private void unregisterEvents(SceneItem item) {
-		if (!this.registeredEvents.containsKey(item)) {
-			return;
-		}
-		List<String> eventNames = this.registeredEvents.get(item);
-		for (String eventName : eventNames) {
-			this.unregisterEvent(eventName, item);
-		}
-		this.registeredEvents.remove(item);
-	}
-
 	/**
 	 * Returns the size of the current scene.
 	 * 
@@ -112,21 +131,16 @@ public abstract class Scene {
 	public Dimension getSize() {
 		return this.size.getSize();
 	}
-
-	/**
-	 * Return the last generated image of the current scene.
-	 * 
-	 * @return the last generated image of the current scene.
-	 */
-	public Image getLastFrame() {
-		return this.lastFrame;
+	
+	public void setSize(Dimension size) {
+		this.size = size;
 	}
 
 	public int getFrameCount() {
 		return this.frameCount;
 	}
 
-	public SortedSet<SceneItem> getItems() {
+	public SortedSet<Item> getItems() {
 		return Collections.unmodifiableSortedSet(this.items);
 	}
 
@@ -134,34 +148,8 @@ public abstract class Scene {
 		return this.animated;
 	}
 
-	public void registerEvent(String eventName, SceneItem listener) {
-		if (!this.eventRegistrations.containsKey(eventName)) {
-			this.eventRegistrations.put(eventName, new LinkedList<SceneItem>());
-		}
-		this.eventRegistrations.get(eventName).add(listener);
+	private void unregisterEvents(Item item) {
 
-		if (!this.registeredEvents.containsKey(listener)) {
-			this.registeredEvents.put(listener, new LinkedList<String>());
-		}
-		this.registeredEvents.get(listener).add(eventName);
-	}
-
-	public void unregisterEvent(String eventName, SceneItem listener) {
-		if (!this.eventRegistrations.containsKey(eventName)) {
-			return;
-		}
-		this.eventRegistrations.get(eventName).remove(listener);
-	}
-
-	public void fireEvent(SceneItem source, String eventName, Object data) {
-		if (!this.eventRegistrations.containsKey(eventName)) {
-			return;
-		}
-		List<SceneItem> items = this.eventRegistrations.get(eventName);
-		Event event = new Event(source, eventName, data);
-		for (SceneItem item : items) {
-			item.notify(event);
-		}
 	}
 
 	public void startAnimation() {
@@ -182,7 +170,10 @@ public abstract class Scene {
 		while (this.animated) {
 
 			long start = System.currentTimeMillis();
-			this.lastFrame = renderFrame();
+			this.updateState();
+			Image newFrame = renderFrame();
+			this.updateDisplay(newFrame);
+			this.frameCount++;
 			long end = System.currentTimeMillis();
 
 			// insure that the rate of frame creation do now exceed 25 FPS.
@@ -204,33 +195,36 @@ public abstract class Scene {
 		}
 	}
 
-	public Image renderFrame() {
+	public void updateState() {
 		synchronized (this.removedItems) {
-			// cleanup SceneItems to be removed.
+			// cleanup items to be removed.
 			this.items.removeAll(this.removedItems);
 			this.removedItems.clear();
 		}
 
 		synchronized (this.addedItems) {
-			// Add newly created SceneItems.
+			// Add newly created items.
 			this.items.addAll(this.addedItems);
 			this.addedItems.clear();
 		}
+		
+		// For each item...
+		for (Item item : this.items) {
+			item.update(); // update its state.
+		}
+	}
+
+	public Image renderFrame() {
 
 		// Create a new image
 		Image newFrame = new BufferedImage(this.size.width, this.size.height, BufferedImage.TYPE_INT_RGB);
 		Graphics g = newFrame.getGraphics();
 
-		// For each SceneItem...
-		for (SceneItem sceneItem : this.items) {
-			sceneItem.update(); // update its state.
-			sceneItem.draw(g); // draw it on the new image.
+		// For each item...
+		for (Item item : this.items) {
+			item.draw(g); // draw it on the new image.
 		}
 
-		// update the display and internal states.
-		this.updateDisplay(newFrame);
-		this.frameCount++;
-		
 		return newFrame;
 	}
 

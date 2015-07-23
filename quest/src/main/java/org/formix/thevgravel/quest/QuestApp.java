@@ -2,12 +2,6 @@ package org.formix.thevgravel.quest;
 
 import javax.swing.SwingUtilities;
 import javax.swing.JFrame;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseMotionAdapter;
-
 
 public class QuestApp {
     

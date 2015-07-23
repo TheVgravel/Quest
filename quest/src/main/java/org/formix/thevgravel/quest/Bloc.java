@@ -1,22 +1,18 @@
 package org.formix.thevgravel.quest;
 
-import java.awt.Image;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.formix.thevgravel.quest.engine.Decor;
+import org.formix.thevgravel.quest.engine.Sprite;
 
-public class Bloc extends Decor {
-	
+public class Bloc extends Sprite {
+
 	public Bloc() {
 		try {
-			Image image = ImageIO.read(this.getClass().getResourceAsStream("mur-test.png"));
-			this.setImage(image);
+			this.setImage(ImageIO.read(this.getClass().getResourceAsStream("mur-test.png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-
 }
