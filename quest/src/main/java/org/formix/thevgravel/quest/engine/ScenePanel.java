@@ -1,7 +1,10 @@
 package org.formix.thevgravel.quest.engine;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -29,8 +32,21 @@ public class ScenePanel extends JPanel {
 
 		this.convertKeyListener();
 		this.convertMouseListener();
-
+		
+		this.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				scene.setSize(getSize());
+			}
+		});
+		
 		this.setFocusable(true);
+	}
+	
+	@Override
+	public void setSize(Dimension size) {
+		this.scene.setSize(size);
+		super.setSize(size);
 	}
 	
 	private void convertMouseListener() {

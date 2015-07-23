@@ -1,6 +1,12 @@
 package org.formix.thevgravel.quest;
 
 import javax.swing.SwingUtilities;
+
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
+
 import javax.swing.JFrame;
 
 public class QuestApp {
