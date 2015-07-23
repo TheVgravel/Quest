@@ -126,7 +126,7 @@ public class Animation extends Sprite {
 			this.animationPosition = new Rectangle(0, 0, this.getImage().getWidth(null),
 					this.getImage().getHeight(null));
 		}
-		if (this.animationPosition != null) {
+		if ((this.animationPosition != null) && (this.spriteCount > 0)) {
 			this.spriteWidth = this.getImage().getWidth(null) / this.spriteCount;
 		}
 	}
@@ -143,11 +143,11 @@ public class Animation extends Sprite {
 	/**
 	 * Sets the number of images of the current animation.
 	 * 
-	 * @param imageCount
+	 * @param spriteCount
 	 *            the number of images of the current animation.
 	 */
-	public void setImageCount(int imageCount) {
-		this.spriteCount = imageCount;
+	public void setSpriteCount(int spriteCount) {
+		this.spriteCount = spriteCount;
 	}
 
 	/**
@@ -193,7 +193,9 @@ public class Animation extends Sprite {
 	 */
 	public void startAnimation() {
 		this.animated = true;
-		this.lastUpdate = System.currentTimeMillis();
+		if (this.lastUpdate == 0) {
+			this.lastUpdate = System.currentTimeMillis();
+		}
 	}
 
 	/**

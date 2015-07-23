@@ -33,7 +33,7 @@ public class MyPanel extends ScenePanel {
 		this.bonhomme.setX(50);
 		this.bonhomme.setY(35);
 		this.bonhomme.setZ(100);
-		this.bonhomme.setFps(16);
+		this.bonhomme.setFps(10);
 		this.getScene().addItem(bonhomme);
 		
 		Bloc bloc1 = new Bloc();
