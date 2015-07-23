@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EventObject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
@@ -28,6 +29,7 @@ public abstract class Scene {
 	
 	private List<KeyListener> keyListeners;
 	private List<MouseListener> mouseListeners;
+	private List<AnimationListener> animationListeners;
 
 	public Scene() {
 		this(640, 480);
@@ -52,6 +54,7 @@ public abstract class Scene {
 		
 		this.keyListeners = new LinkedList<KeyListener>();
 		this.mouseListeners = new LinkedList<MouseListener>();
+		this.animationListeners = new LinkedList<AnimationListener>();
 	}
 
 	private static Comparator<? super Item> createComparator() {
@@ -91,6 +94,17 @@ public abstract class Scene {
 		return this.mouseListeners.toArray(new MouseListener[this.mouseListeners.size()]);
 	}
 
+	public void addAnimationListener(AnimationListener listener) {
+		this.animationListeners.add(listener);
+	}
+	
+	public void removeAnimationListener(AnimationListener listener) {
+		this.animationListeners.remove(listener);
+	}
+	
+	public AnimationListener[] getAnimationListeners() {
+		return this.animationListeners.toArray(new AnimationListener[this.animationListeners.size()]);
+	}
 
 	/**
 	 * Add a item to the current scene. When added, the
@@ -164,6 +178,9 @@ public abstract class Scene {
 			}
 		});
 		t.start();
+		for (AnimationListener listener : this.animationListeners) {
+			listener.animationStarted(new EventObject(this));
+		}
 	}
 
 	private void executeAnimationLoop() {
@@ -230,6 +247,9 @@ public abstract class Scene {
 
 	public void stopAnimation() {
 		this.animated = false;
+		for (AnimationListener listener : this.animationListeners) {
+			listener.animationStopped(new EventObject(this));
+		}
 	}
 
 	public abstract void updateDisplay(Image renderedImage);

@@ -2,6 +2,7 @@ package org.formix.thevgravel.quest.engine;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.EventObject;
 
 public class FpsDisplay extends AbstractItem {
 
@@ -30,10 +31,25 @@ public class FpsDisplay extends AbstractItem {
 	}
 
 	public void initialize() {
-		this.lastFrameCount = this.getScene().getFrameCount();
-		this.setZ(200);
-		this.lastUpdate = System.currentTimeMillis();
-		this.text = "Getting data...";
+		this.setInitialData();
+		this.getScene().addAnimationListener(new AnimationListener() {
+			
+			public void animationStopped(EventObject e) {
+				setInitialData();
+			}
+			
+			public void animationStarted(EventObject e) {
+				lastUpdate = System.currentTimeMillis();
+			}
+		});
 	}
 
+	private void setInitialData() {
+		this.lastFrameCount = this.getScene().getFrameCount();
+		this.setZ(200);
+		this.lastUpdate = 0;
+		this.text = "Waiting for data...";
+		this.lastFrameCount = 0;
+		
+	}
 }
