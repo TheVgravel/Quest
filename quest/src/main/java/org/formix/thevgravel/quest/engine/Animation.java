@@ -15,7 +15,7 @@ public class Animation extends Sprite {
 	private int spriteCount;
 	private int fps;
 	private int spritePeriod; // the time between sprite changes: 1000 / fps
-	private Rectangle animationPosition;
+	private Rectangle spriteLane;
 	private int spriteWidth;
 	private int spriteIndex;
 	private boolean animated;
@@ -25,7 +25,7 @@ public class Animation extends Sprite {
 	 * Creates a dummy animation for subclassing.
 	 */
 	protected Animation() {
-		this(null, 0, 1, null);
+		this(null, 1, 1, null);
 	}
 
 	/**
@@ -57,17 +57,17 @@ public class Animation extends Sprite {
 	 * @param fps
 	 *            The desired frame per seconds for the current animation.
 	 * 
-	 * @param animationPosition
+	 * @param spriteLane
 	 *            The position of all images of the current animation within the
 	 *            given sprite sheet. The animation sprites are expected to be
 	 *            all of the same width and height, contiguous and horizontal
 	 *            within the given image.
 	 */
-	public Animation(Image image, int spriteCount, int fps, Rectangle animationPosition) {
+	public Animation(Image image, int spriteCount, int fps, Rectangle spriteLane) {
 		super(image);
 		this.spriteCount = spriteCount;
 		this.setFps(fps);
-		this.setAnimationPosition(animationPosition);
+		this.setSpriteLane(spriteLane);
 		this.spriteIndex = 0;
 		this.animated = false;
 		this.lastUpdate = 0;
@@ -107,8 +107,8 @@ public class Animation extends Sprite {
 	 * 
 	 * @return the sprite position within the specified image.
 	 */
-	public Rectangle getAnimationPosition() {
-		return animationPosition;
+	public Rectangle getSpriteLane() {
+		return this.spriteLane;
 	}
 
 	/**
@@ -119,14 +119,14 @@ public class Animation extends Sprite {
 	 * @param animationPosition
 	 *            the sprite position within the specified image.
 	 */
-	public void setAnimationPosition(Rectangle animationPosition) {
+	public void setSpriteLane(Rectangle animationPosition) {
 		if (animationPosition != null) {
-			this.animationPosition = animationPosition;
+			this.spriteLane = animationPosition;
 		} else if (this.getImage() != null) {
-			this.animationPosition = new Rectangle(0, 0, this.getImage().getWidth(null),
+			this.spriteLane = new Rectangle(0, 0, this.getImage().getWidth(null),
 					this.getImage().getHeight(null));
 		}
-		if ((this.animationPosition != null) && (this.spriteCount > 0)) {
+		if ((this.spriteLane != null) && (this.spriteCount > 0)) {
 			this.spriteWidth = this.getImage().getWidth(null) / this.spriteCount;
 		}
 	}
@@ -176,7 +176,7 @@ public class Animation extends Sprite {
 	@Override
 	public void setImage(Image image) {
 		super.setImage(image);
-		this.setAnimationPosition(null);
+		this.setSpriteLane(null);
 	}
 
 	/**
@@ -229,14 +229,14 @@ public class Animation extends Sprite {
 		}
 
 		int imgWidth = this.spriteWidth;
-		int imgHeight = this.getAnimationPosition().height;
+		int imgHeight = this.getSpriteLane().height;
 		int displayedWidth = (int) (imgWidth * this.getEffectiveZoomFactor() / 100);
 		int displayedHeight = (int) (imgHeight * this.getEffectiveZoomFactor() / 100);
 
 		g.drawImage(this.getImage(), this.getX(), this.getY(), this.getX() + displayedWidth,
-				this.getY() + displayedHeight, this.getAnimationPosition().x + imgWidth * this.spriteIndex,
-				this.getAnimationPosition().y, this.getAnimationPosition().x + imgWidth * (this.spriteIndex + 1),
-				this.getAnimationPosition().y + this.getAnimationPosition().height, null);
+				this.getY() + displayedHeight, this.getSpriteLane().x + imgWidth * this.spriteIndex,
+				this.getSpriteLane().y, this.getSpriteLane().x + imgWidth * (this.spriteIndex + 1),
+				this.getSpriteLane().y + this.getSpriteLane().height, null);
 	}
 
 }

@@ -33,7 +33,7 @@ public class Bonhomme extends Animation {
 		this.runRightRect = new Rectangle(0, 0, 128, 32);
 		this.runLeftRect = new Rectangle(0, 32, 128, 32);
 
-		this.setAnimationPosition(this.runRightRect);
+		this.setSpriteLane(this.runRightRect);
 		this.state = BonhommeState.STILL;
 		this.setSpriteIndex(3);
 		
@@ -65,7 +65,7 @@ public class Bonhomme extends Animation {
 
 		case 37: // left
 			state = BonhommeState.RUN_LEFT;
-			setAnimationPosition(runLeftRect);
+			setSpriteLane(runLeftRect);
 			startAnimation();
 			break;
 
@@ -74,7 +74,7 @@ public class Bonhomme extends Animation {
 
 		case 39: // right
 			state = BonhommeState.RUN_RIGHT;
-			setAnimationPosition(runRightRect);
+			setSpriteLane(runRightRect);
 			startAnimation();
 			break;
 
@@ -125,7 +125,7 @@ public class Bonhomme extends Animation {
 	}
 
 	public synchronized boolean update() {
-		boolean updated = super.update();;
+		boolean updated = super.update();
 
 		int dx = 6;   // X movement.
 		if (this.getFps() == 16) {
